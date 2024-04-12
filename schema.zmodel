@@ -11,8 +11,14 @@ generator client {
 model User {
     id String @id @default(cuid())
     email String @unique
-    password String
+    password String @password @omit
     tasks Task[]
+
+    // anyone can sign up
+    @@allow('create', true)
+
+    // user profile is publicly readable
+    @@allow('read', true)
 }
 
 model Item {
@@ -23,6 +29,12 @@ model Item {
     content String
     task Task? @relation(fields: [taskId], references: [id])
     taskId String?
+
+    // unsold pets are readable to all; sold ones are readable to buyers only
+    @@allow('read', taskId == null || task.user == auth())
+
+    // only allow update to 'taskId' field
+    @@allow('update', name == future().name && content == future().content && taskId == null )
 }
 
 model Task {
@@ -32,4 +44,21 @@ model Task {
     items Item[]
     user User @relation(fields: [userId], references: [id])
     userId String
+    
+    // users can read their tasks
+    @@allow('read,create', auth() == user)
+}
+
+plugin openapi {
+    provider = '@zenstackhq/openapi'
+    prefix = '/api'
+    flavor = 'rest'
+    title = 'ImagetoText Store API'
+    specVersion = '3.0.0'
+    version = '0.1.0'
+    description = 'AI image to text API'
+    output = 'imagetotext-api.json'
+    securitySchemes = { 
+        myBearer: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }
+    }
 }

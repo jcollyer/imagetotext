@@ -13,13 +13,19 @@ generator client {
     provider = "prisma-client-js"
 }
 
+/// @@allow('create', true)
+/// @@allow('read', true)
 model User {
     id String @id() @default(cuid())
     email String @unique()
+    /// @password
+    /// @omit
     password String
     tasks Task[]
 }
 
+/// @@allow('read', taskId == null || task.user == auth())
+/// @@allow('update', name == future().name && content == future().content && taskId == null)
 model Item {
     id String @id() @default(cuid())
     createdAt DateTime @default(now())
@@ -30,6 +36,7 @@ model Item {
     taskId String?
 }
 
+/// @@allow('read,create', auth() == user)
 model Task {
     id String @id() @default(cuid())
     createdAt DateTime @default(now())
