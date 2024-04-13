@@ -21,7 +21,7 @@ const prisma = new PrismaClient();
 
 // Vercel can't properly serve the Swagger UI CSS from its npm package, here we
 // load it from a public location
-const options = { customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.css' };
+const options = { customCssUrl: 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@4/swagger-ui.css' };
 const spec = JSON.parse(
     fs.readFileSync(path.join(__dirname, '../imagetotext-api.json'), 'utf8')
 );
