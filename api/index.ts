@@ -1,7 +1,7 @@
 import {PrismaClient } from '@prisma/client';
 import { ZenStackMiddleware } from '@zenstackhq/server/express';
 import RestApiHandler from '@zenstackhq/server/api/rest';
-import { withPresets } from '@zenstackhq/runtime';
+import { enhance } from '@zenstackhq/runtime';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { compareSync } from 'bcryptjs';
@@ -59,9 +59,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.use('/api', ZenStackMiddleware({ 
-    getPrisma: (req) => {
-        return withPresets(prisma, {user: getUser(req)})
-    },
+    getPrisma: (request) => enhance(prisma, { user: getUser(request) }),
     handler: apiHandler 
 }));
 
