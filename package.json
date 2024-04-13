@@ -8,8 +8,7 @@
     "dev": "npx tsx watch api/app.ts",
     "prisma": "npx zenstack generate && npx prisma db push",
     "seed": "npx tsx prisma/seed.ts",
-    "vercel-build": "zenstack generate && tsc && prisma migrate deploy && tsx prisma/seed.ts",
-    "postinstall": "npx zenstack generate"
+    "vercel-build": "zenstack generate && tsc && prisma db push && tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
